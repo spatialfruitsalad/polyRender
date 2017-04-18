@@ -89,8 +89,6 @@ This program will create a pov file, that contains the information to draw a nic
 
 povray can be called on the created polyfile and will create a png image from the pov file.
 
-![rendering of a sphere packing](https://cloud.githubusercontent.com/assets/17979038/25128693/dea86b48-243a-11e7-8a95-6b9cc504605d.png)
-
 ## create multiple images at different rotations
 Videos are just a bunch of sequential images. To create a video of a rotating object, we need to create many images of that object at various rotation angles. This can be done with the poly2pov program via the (angle) option. 
 Each call will create a respective pov file which can then be rendered to a png with povray.
