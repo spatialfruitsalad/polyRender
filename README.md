@@ -21,9 +21,9 @@ See the section create a video from multiple images on how to do that.
 Note that depending on your file and folder structure, some variables on the script have to be changed. They are marked within the skript. You need the programs pomelo, karambola and povray installed and make them known to the script.
 The lines that need to be changed are the following
 ```
-POMELO=/home/sweis/setvoronoi/bin/pomelo
-KARAMBOLA=/home/sweis/karambola-NJP_documented/karambola
-THISSCRIPTFOLDER=/home/sweis/projects/polyRender/
+POMELO=/usr/bin/pomelo
+KARAMBOLA=/usr/bin/karambola
+THISSCRIPTFOLDER=/usr/bin/polyRender/
 POVRAY=povray
 
 ## Half the offset of the "virtual eyes" in units of voxels. My particles have a diameter of around 50 voxels and 2* 5 voxels offset between left and right eye works fine
