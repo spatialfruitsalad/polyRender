@@ -2,6 +2,8 @@
 # Poly Render
 This is a collection of various scripts, which can help you create nice images from poly files. Poly files are the output of pomelo, which you can find at https://github.com/spatialfruitsalad/pomelo  or http://theorie1.physik.uni-erlangen.de/research/pomelo/index.html .
 
+![test](https://cloud.githubusercontent.com/assets/17979038/25128693/dea86b48-243a-11e7-8a95-6b9cc504605d.png)
+
 ## Example Video File
 Download the video file here: https://faubox.rrze.uni-erlangen.de/dl/fi7Ukc1QAq97YY6BugCmQd7s/w020_stereo5_jpeg.avi
 
