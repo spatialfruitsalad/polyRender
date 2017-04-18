@@ -1,0 +1,14 @@
+#!/bin/bash
+
+POLYFILE=$1
+CENTERFILE=$2
+W020FILE=$3
+ANGLE=$4
+
+XSHIFT=$5
+
+FILE="out_"$ANGLE
+P2P=/home/sweis/projects/polyRender/poly2pov/poly2pov
+
+
+$P2P $POLYFILE $CENTERFILE $W020FILE $FILE $ANGLE $XSHIFT

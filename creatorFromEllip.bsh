@@ -1,0 +1,200 @@
+#!/bin/bash
+
+############################################
+## Change the paths to match your folders and desired image
+############################################
+
+POMELO=/home/sweis/setvoronoi/bin/pomelo
+KARAMBOLA=/home/sweis/karambola-NJP_documented/karambola
+THISSCRIPTFOLDER=/home/sweis/projects/polyRender/
+POVRAY=povray
+
+## Half the offset of the "virtual eyes" in units of voxels. My particles have a diameter of 50 voxels
+OFFSET=5
+
+
+
+############################################
+## Script stuff 
+############################################
+
+ELLIP=$1
+POMELOINFOLDER=stereoFileFolder
+
+WORKINGDIR=`pwd`
+
+mkdir $POMELOINFOLDER
+
+CALCMEAN=$THISSCRIPTFOLDER"calculateMean9.awk"
+CALCMINMAX=$THISSCRIPTFOLDER"calculateMinMax4.awk"
+GETLABELS=$THISSCRIPTFOLDER"polycut/getLabels.bsh"
+POLYCUT=$THISSCRIPTFOLDER"polycut/polyCut"
+POLY2POV=$THISSCRIPTFOLDER"poly2pov/poly2pov"
+STEREO=$THISSCRIPTFOLDER"stereoImageCreator/stereoImageCreator"
+
+
+############################################
+## This is pomelo stuff
+############################################
+
+cp $ELLIP $POMELOINFOLDER
+cd $POMELOINFOLDER
+ELLIPFILE=`realpath $ELLIP`
+POMELOINFOLDER=`pwd`
+
+
+READFILE=read.lua
+echo "stepstheta = 1"  > $READFILE
+echo "stepsphi = 1" >> $READFILE
+echo "shrink = 0.0" >> $READFILE
+echo "s = {}" >> $READFILE
+echo "function docalculation (p)"  >> $READFILE
+echo "    local l = s[0]" >> $READFILE
+echo "    local xoffset = s[1]" >> $READFILE
+echo "    local yoffset = s[2]" >> $READFILE
+echo "    local zoffset = s[3]" >> $READFILE
+echo "    p:addpoint(l, xoffset, yoffset, zoffset)" >> $READFILE
+echo "end" >> $READFILE
+
+MINX=`$CALCMINMAX $ELLIPFILE | grep cx | awk '{print $2 - 50.0}'`
+MINY=`$CALCMINMAX $ELLIPFILE | grep cy | awk '{print $2 - 50.0}'`
+MINZ=`$CALCMINMAX $ELLIPFILE | grep cz | awk '{print $2 - 50.0}'`
+
+MAXX=`$CALCMINMAX $ELLIPFILE | grep cx | awk '{print $3 + 50.0}'`
+MAXY=`$CALCMINMAX $ELLIPFILE | grep cy | awk '{print $3 + 50.0}'`
+MAXZ=`$CALCMINMAX $ELLIPFILE | grep cz | awk '{print $3 + 50.0}'`
+
+CONFIGFILE=config.lua
+echo "positionfile = \""$ELLIPFILE"\""  > $CONFIGFILE
+echo "readfile = \""$READFILE"\"" >> $CONFIGFILE
+echo "xmin = "$MINX >> $CONFIGFILE
+echo "ymin = "$MINY >> $CONFIGFILE
+echo "zmin = "$MINZ >> $CONFIGFILE
+echo "xmax = "$MAXX >> $CONFIGFILE
+echo "ymax = "$MAXY >> $CONFIGFILE
+echo "zmax = "$MAXZ >> $CONFIGFILE
+echo "epsilon = 1e-6" >> $CONFIGFILE
+echo "boundary = \"none\"" >> $CONFIGFILE
+echo "postprocessing = false" >> $CONFIGFILE
+echo "savesurface = false" >> $CONFIGFILE
+echo "savereduced = false" >> $CONFIGFILE
+echo "savepoly = true" >> $CONFIGFILE
+
+echo "Starting Voronoi Cell calculation "
+
+$POMELO -mode GENERIC -i $CONFIGFILE -o $POMELOINFOLDER > pomelo.log 2> pomelo.err
+
+
+############################################
+## This will cut down the poly file
+############################################
+
+CX=`$CALCMEAN $ELLIPFILE | grep cx | awk '{print $2}'`
+CY=`$CALCMEAN $ELLIPFILE | grep cy | awk '{print $2}'`
+CZMIN=200
+CZMAX=300
+R=100
+
+LABELS=`$GETLABELS $ELLIPFILE $CX $CY $CZMIN $CZMAX $R`
+echo $LABELS
+
+echo "Cutting Poly file "
+
+$POLYCUT cell.poly cell.poly.cut $LABELS > polycut.log 2> polycut.err
+
+POLYCUTFILE=`realpath cell.poly.cut` 
+
+############################################
+## Running Karambola
+############################################
+
+echo "Calculating Minkowski Tensors"
+$KARAMBOLA --labels --reference-centroid -i cell.poly.cut  -o karambola_out > karambola.log 2> karambola.err
+
+W020FILE=`realpath karambola_out/w020_eigsys`
+
+############################################
+## create rendered images for left an right eye 
+############################################
+
+LEFTFOLDER="xshiftm"$OFFSET
+RIGHTFOLDER="xshift"$OFFSET
+OUTFOLDER="stereo"$OFFSET
+
+mkdir $OUTFOLDER
+
+## create LEFT Image
+mkdir $LEFTFOLDER
+cd $LEFTFOLDER
+
+
+echo "poly2pov left images"
+for a in `seq 0 1 360`
+do
+    $POLY2POV $POLYCUTFILE $ELLIPFILE $W020FILE abcd $a -$OFFSET > poly2pov.log 2> poly2pov.err
+done
+
+echo "renderling left images"
+for f in `find -name '*.pov'`
+do
+$POVRAY $f  Display=false Width=1024 Height=768 Antialias=true Antialias_Depth=4 > povray.log 2> povray.err
+done
+
+mkdir img
+mv *.png img/
+
+cd $POMELOINFOLDER
+
+
+## create RIGHT Image
+mkdir $RIGHTFOLDER
+cd $RIGHTFOLDER
+
+echo "poly2pov right images"
+for a in `seq 0 1 360`
+do
+    $POLY2POV $POLYCUTFILE $ELLIPFILE $W020FILE abcd $a $OFFSET > poly2pov.log 2> poly2pov.err
+
+done
+
+echo "renderling right images"
+for f in `find -name '*.pov'`
+do
+$POVRAY $f  Display=false Width=1024 Height=768 Antialias=true Antialias_Depth=4  > povray.log 2> povray.err
+done
+
+mkdir img
+mv *.png img/
+
+cd $POMELOINFOLDER
+
+
+
+############################################
+## Combine Left and Right image
+############################################
+
+OUT=`realpath $OUTFOLDER`
+LEFT=`realpath $LEFTFOLDER"/img/"`
+RIGHT=`realpath $RIGHTFOLDER"/img/"`
+
+
+echo ""
+echo $RIGHT
+
+cd $LEFT
+FILENAMES=`find -name '*.png'`
+
+for f in $FILENAMES
+do
+    filename=$(basename "$f")
+    #echo $filename $OUT
+    LFN=$LEFT"/"$filename
+    RFN=$RIGHT"/"$filename
+    echo $STEREO $LFN $RFN $OUT"/"$filename 
+    $STEREO $LFN $RFN $OUT"/"$filename 
+done
+
+wait
+
+

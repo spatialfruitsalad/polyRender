@@ -1,0 +1,5 @@
+#!/bin/bash
+clang++ -Wall -Wextra --std=c++1y -Wall -O3 poly2pov.cpp -o poly2pov
+#clang++ -Wall -Wextra --std=c++1y -Wall -O3 ellip2pov.cpp -o ellip2pov
+#clang++ -Wall -Wextra --std=c++1y -Wall -O3 ellip2pov_phil.cpp -o ellip2pov_phil
+#clang++ -Wall -Wextra --std=c++1y -Wall -O3 ellip2pov_beta020.cpp -o ellip2pov_beta020

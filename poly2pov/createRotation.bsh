@@ -1,0 +1,31 @@
+#!/bin/bash
+
+POLYFILE=$1
+CENTERFILE=$2
+W020FILE=$3
+XSHIFT=$4
+
+CI=/home/sweis/projects/poly2pov/createImage_beta020.bsh
+POLYCUT=/home/sweis/projects/polycut/polyCut
+POVRAY=/usr/bin/povray
+
+
+POLYCUTFILE=$POLYFILE"_cut.poly"
+
+labels=`cat $CENTERFILE | awk '{ dx=$2-512;dy=$3-512;r=dx*dx+dy*dy;  if ($4 > 200 && $4 < 400 && r <= 100*100 ){print $0}}'| grep -v "#" | awk '{print $1}' | sed ':a;N;$!ba;s/\n/ /g'`
+echo $labels
+
+$POLYCUT $POLYFILE $POLYCUTFILE $labels
+
+for a in `seq 0 1 360`
+do
+    $CI $POLYCUTFILE $CENTERFILE $W020FILE $a $XSHIFT  
+done
+
+for f in `find -name '*.pov'`
+do
+$POVRAY $f  Display=false Width=1024 Height=768 Antialias=true Antialias_Depth=4 
+done
+
+mkdir img
+mv *.png img/

@@ -1,0 +1,31 @@
+#!/bin/bash
+
+STEREO=/home/sweis/projects/stereoImageCreator/stereoImageCreator
+
+LEFTFOLDER=$1
+RIGHTFOLDER=$2
+OUTFOLDER=$3
+
+WORKINGDIR=`pwd`
+
+mkdir $OUTFOLDER
+
+OUT=`realpath $OUTFOLDER`
+LEFT=`realpath $LEFTFOLDER`
+RIGHT=`realpath $RIGHTFOLDER`
+
+cd $LEFTFOLDER
+FILENAMES=`find -name '*.png'`
+
+for f in $FILENAMES
+do
+    filename=$(basename "$f")
+    #echo $filename $OUT
+    LFN=$LEFT"/"$filename
+    RFN=$RIGHT"/"$filename
+    #echo $STEREO $LFN $RFN $OUT"/"$filename 
+    $STEREO $LFN $RFN $OUT"/"$filename & 
+done
+
+wait
+

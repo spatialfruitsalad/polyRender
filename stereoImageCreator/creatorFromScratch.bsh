@@ -1,0 +1,31 @@
+#!/bin/bash
+
+ROT=/home/sweis/projects/poly2pov/createRotation.bsh
+STEREO=/home/sweis/projects/stereoImageCreator/creator.bsh
+
+
+POLY=$1
+CENTER=$2
+W020FILE=$3
+OFFSET=$4
+
+LEFTFOLDER="xshiftm"$OFFSET
+RIGHTFOLDER="xshift"$OFFSET
+OUTFOLDER="stereo"$OFFSET
+
+WORKINGDIR=`pwd`
+
+# create left image
+mkdir $LEFTFOLDER
+cd $LEFTFOLDER
+$ROT $POLY $CENTER $W020FILE -$OFFSET
+cd $WORKINGDIR
+
+# create right image
+mkdir $RIGHTFOLDER
+cd $RIGHTFOLDER
+$ROT $POLY $CENTER $W020FILE $OFFSET
+cd $WORKINGDIR
+
+# combine images
+$STEREO $LEFTFOLDER/img/ $RIGHTFOLDER/img/ $OUTFOLDER

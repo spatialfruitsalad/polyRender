@@ -1,0 +1,22 @@
+#! /bin/bash
+
+ELLIPFILE=$1
+
+CX=$2 
+CY=$3
+
+ZMIN=$4
+ZMAX=$5
+
+R=$6
+
+cat $ELLIPFILE | awk -v zmin=$ZMIN -v zmax=$ZMAX -v cx=$CX -v cy=$CY -v rad=$R '
+{ 
+    dx=$2-cx; 
+    dy=$3-cy; 
+    r=dx*dx+dy*dy; 
+    if ( $4 > zmin && $4 < zmax && r <= rad*rad )
+    {
+        print $1
+    }
+}' 
