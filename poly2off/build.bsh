@@ -1,0 +1,2 @@
+#!/bin/bash
+clang++ -Wextra --std=c++1y -Wall -O3 poly2off.cpp -o poly2off

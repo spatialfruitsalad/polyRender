@@ -1,6 +1,6 @@
 
 # Poly Render
-This is a collection of various scripts, which can help you create nice images from poly files. Poly files are the output of pomelo, which you can find at https://github.com/spatialfruitsalad/pomelo  or http://theorie1.physik.uni-erlangen.de/research/pomelo/index.html .
+This is a collection of various scripts and programs , which can help you create nice images from poly files. Poly files are the output of pomelo, which you can find at https://github.com/spatialfruitsalad/pomelo  or http://theorie1.physik.uni-erlangen.de/research/pomelo/index.html .
 
 ![test](https://cloud.githubusercontent.com/assets/17979038/25128693/dea86b48-243a-11e7-8a95-6b9cc504605d.png)
 
@@ -115,3 +115,8 @@ To create a stereo video, a left and a right image is requied. a Top down sketch
 
 The program `poly2pov` has a parameter xshift, which describes the offset of the camera to the central axis. You need to set the same amount of xshift in positive and negative direction. The images are then merged with the program stereoImageCreator which takes two images and combines them left and right to a stereo image. These images can then be converted to an avi video with the same procedure as described above.
 
+# Other Helper Programs
+## Poly2Off
+If you do not want to use povray to render your images, you can also use geomview: http://www.geomview.org/
+Geomview reads `.off` files. A `poly` File can be converted to an `off` file with the program `poly2off`. 
+The program takes two parameters, The first is the input file name (aka path to the poly file), the second is the output file name (aka path to the off file).
