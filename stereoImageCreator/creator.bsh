@@ -1,6 +1,6 @@
 #!/bin/bash
 
-STEREO=/home/sweis/projects/stereoImageCreator/stereoImageCreator
+STEREO=/home/sweis/projects/polyRender/stereoImageCreator/stereoImageCreator
 
 LEFTFOLDER=$1
 RIGHTFOLDER=$2

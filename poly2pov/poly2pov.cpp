@@ -86,7 +86,7 @@ int main (int argc, char* argv[])
     std::cout << "done parsing files.\nconverting to pov" << std::endl;
 
    // print pov file
-if(false)
+if(true)
 {
     std::cout << "print basic pov file" << std::endl;
     std::string povFileName = povIDName + "_angle" + std::to_string(angle) +  "_basic.pov";
@@ -94,14 +94,15 @@ if(false)
 
     std::cout << "\tprint default properties" << std::endl;
     double cameraPosX =  xshift;
-    double cameraPosY =  - radiusMax;
-    out << "light_source { <411, -812,  800> color rgb <1,1,1> }\n";
+    double cameraPosY =  0.25*radiusMax;
+    double cameraPosZ = - radiusMax;
+    out << "light_source { <411, 812,  -800> color rgb <1,1,1> }\n";
     //out << "light_source { <412, -812, -1000> color rgb<0.5, 0.5, 0.5> shadowless }\n";
-    out << "light_source { <512, -812,  212> color rgb<0.5, 0.5, 0.5> shadowless }\n";
+    out << "light_source { <512, 812,  -212> color rgb<0.5, 0.5, 0.5> shadowless }\n";
 
     out << "camera { \n";
 //    out << "  orthographic angle 60\n";
-    out << "  location <" << cameraPosX  <<  ", " << cameraPosY << ", "<< 0 << "> \n";
+    out << "  location <" << cameraPosX  <<  ", " << cameraPosY << ", "<< cameraPosZ << "> \n";
     out << "  look_at <0, 20, 0> \n";
     out << "  right x*image_width/image_height\n";
     out << "}\n";
@@ -111,7 +112,7 @@ if(false)
     printSpheres_basic(out, spherePoints); 
     
     std::string translate2Center =  " translate -< " + std::to_string(mean.x[0]) + ", " + std::to_string(mean.x[1]) + ", " + std::to_string(mean.x[2]) +  ">";
-    std::string rotateString = " rotate < 0, 0, " + std::to_string(angle) + "> ";
+    std::string rotateString = " rotate < 0, " + std::to_string(angle) + ", 0> ";
     out << "\nobject { spheres ";
     out << translate2Center <<  rotateString <<  " pigment { rgb <1, 0.55, 0.13> }   finish {specular 0.6 phong_size 0.0002 ambient rgb <0.2, 0.2, 0.2>} }\n";
     out << "\nobject {cylinders ";
