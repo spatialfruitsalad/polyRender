@@ -75,7 +75,7 @@ void parsePolyFile (std::string polyFileName, std::vector<pT>& cellPoints, std::
             {
                 throw std::string("Error parsing line\n" + line);
             } 
-            cellPoints.push_back(p);
+            cellPoints.push_back(std::move(p));
         }
         else
         {
@@ -104,7 +104,7 @@ void parsePolyFile (std::string polyFileName, std::vector<pT>& cellPoints, std::
                     unsigned long vid = std::stoi(split3[j]); 
                     f.vx.push_back(vid);
                 }
-                faces.push_back(f);
+                faces.push_back(std::move(f));
             }
         }
     }
@@ -296,21 +296,21 @@ void printSpheres_w020 (std::ofstream& out, ptv& points, ptv& a1, ptv& a2, ptv& 
             out <<                  0 << ", ";
             out <<                  0 << "> ," << sphereRadius;
             // scale ellipsoid
-            out << " matrix  < " <<  le.x[0]/lem << ", " << 0 << ", " << 0         << ", ";
-            out <<                     0               << ", " << le.x[1]/lem << ", " << 0         << ", ";
-            out <<                     0               << ", " << 0 << ", " << le.x[2]/lem << ", ";
-            out <<                     "0, 0, 0> ";
-            // rotate ellipsoid
-            // method 1. looks kinda fishy and the ellipsoids do not seem to be oriented quite correclty
-            /*out << " matrix  < " <<    u.x[0] << ", " << v.x[0] << ", " << w.x[0] << ", ";
-            out <<                     u.x[1] << ", " << v.x[1] << ", " << w.x[1] << ", ";
-            out <<                     u.x[2] << ", " << v.x[2] << ", " << w.x[2] << ", ";
-            out <<                     "0         , 0               , 0>";*/
+           //out << " matrix  < " <<  le.x[0]/lem << ", " << 0 << ", " << 0         << ", ";
+           //out <<                     0               << ", " << le.x[1]/lem << ", " << 0         << ", ";
+           //out <<                     0               << ", " << 0 << ", " << le.x[2]/lem << ", ";
+           //out <<                     "0, 0, 0> ";
+           //// rotate ellipsoid
+           //// method 1. looks kinda fishy and the ellipsoids do not seem to be oriented quite correclty
+           ///*out << " matrix  < " <<    u.x[0] << ", " << v.x[0] << ", " << w.x[0] << ", ";
+           //out <<                     u.x[1] << ", " << v.x[1] << ", " << w.x[1] << ", ";
+           //out <<                     u.x[2] << ", " << v.x[2] << ", " << w.x[2] << ", ";
+           //out <<                     "0         , 0               , 0>";*/
+           //out << " matrix  < " <<    u.x[0] << ", " << u.x[1] << ", " << u.x[2] << ", ";
+           //out <<                     v.x[0] << ", " << v.x[1] << ", " << v.x[2] << ", ";
+           //out <<                     w.x[0] << ", " << w.x[1] << ", " << w.x[2] << ", ";
+           //out <<                     "0         , 0               , 0>";
             //translate
-            out << " matrix  < " <<    u.x[0] << ", " << u.x[1] << ", " << u.x[2] << ", ";
-            out <<                     v.x[0] << ", " << v.x[1] << ", " << v.x[2] << ", ";
-            out <<                     w.x[0] << ", " << w.x[1] << ", " << w.x[2] << ", ";
-            out <<                     "0         , 0               , 0>";
             out << " translate <"   << p.x[0] << ", ";
             out <<                    p.x[1] << ", ";
             out <<                    p.x[2] << "> "; 

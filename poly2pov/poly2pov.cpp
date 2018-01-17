@@ -48,6 +48,9 @@ int main (int argc, char* argv[])
     parseW020File(w020FileName, a1, a2, a3, lengths, labelList, betaMap);
 
     pT mean;
+    mean.x[0] = 0;
+    mean.x[1] = 0;
+    mean.x[2] = 0;
     for (pT p : cellPoints)
     {
         mean.x[0] += p.x[0];
