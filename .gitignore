@@ -3,3 +3,11 @@ polycut/polyCut
 stereoImageCreator/lodepng.o
 stereoImageCreator/stereoImageCreator
 poly2off/poly2off
+*.swp
+setpoly2pov/createImage_beta020.bsh
+setpoly2pov/createRotation.bsh
+setpoly2pov/ellip2pov.bsh
+setpoly2pov/setpoly2pov
+setpoly2pov/setpoly2pov_easy
+setpoly2pov/test
+setpoly2pov/xyzr2pov

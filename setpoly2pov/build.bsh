@@ -1,0 +1,4 @@
+#!/bin/bash
+clang++ --std=c++14 -Wall -Wextra  -O3 main.cpp -o setpoly2pov
+#clang++ --std=c++14 -Wall -Wextra  -O3 easy.cpp -o setpoly2pov_easy
+#clang++ --std=c++14 -Wall -Wextra  -O3 xyzr2pov.cpp -o xyzr2pov

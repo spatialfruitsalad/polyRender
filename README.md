@@ -11,6 +11,8 @@ Watch the video on youtube: https://youtu.be/D3qs4lO7-jY
 
 To watch it on your android smartphone, get a google cardboard (~20$) here: https://vr.google.com/cardboard/
 
+## Rendering Set-Voronoi cells of spherical and aspherical particles
+There are two programs: poly2pov can be used for monodisperse spheres. setPoly2Pov is for any packing of aspherical particles, polydisperse particles or in general anything more complex than mnodisperse spheres.
 
 ## TL;DR
 There is a single script that creates stereo images from an `ellip` (particle coordinates) file. 
@@ -31,7 +33,7 @@ OFFSET=5
 
 ```
 
-# How to create 3D videos -- detailed description
+# How to create stereoscopic videos -- detailed description
 ## pomelo
 Pomelo is a gereric Set Voronoi Program that can be obtained from http://theorie1.physik.uni-erlangen.de/research/pomelo/index.html .
 Pomelo calculates the Voronoi Diagram of the sphere packing using generic mode based on an `*.ellip` file. 
