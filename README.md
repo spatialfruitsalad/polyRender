@@ -113,7 +113,7 @@ To create a stereo video, a left and a right image is requied. a Top down sketch
      oxo
      /o\
     /   \
-   V     V
+    V   V
 
 The program `poly2pov` has a parameter xshift, which describes the offset of the camera to the central axis. You need to set the same amount of xshift in positive and negative direction. The images are then merged with the program stereoImageCreator which takes two images and combines them left and right to a stereo image. These images can then be converted to an avi video with the same procedure as described above.
 
