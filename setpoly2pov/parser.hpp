@@ -107,6 +107,54 @@ void normalize (pT& v)
     v.x[2] /= l;
 }
 
+void printXZRFine (std::string fileName, const std::vector<unsigned long>& neighbours)
+{
+
+    std::cout << "parsing xyzr file" << std::endl;
+    std::ifstream infile;
+    infile.open(fileName);
+    if (infile.fail())
+    {
+        throw std::string ("cannot open xyzr input file");
+    }
+    std::string line = "";
+
+    std::string outFileName = fileName + ".fine";
+    std::ofstream outfile(outFileName);
+
+    // ignore the top two lines
+    std::getline(infile, line);
+    outfile << line << std::endl;
+    std::getline(infile, line);
+    outfile << line << std::endl;
+
+
+    unsigned long lineID = 0;
+    while(std::getline(infile, line))   // parse lines
+    {
+        if (line.find("#") != std::string::npos) continue;  // ignore comment lines
+        
+        //std::cout << std::endl <<  line << " " << std::endl;
+        splitstring ss(line.c_str());
+        std::vector<std::string> split = ss.split(' ');
+        if(split.size() != 6) std::cerr << "WARNING: Line Size not correct!" << std::endl;
+        lineID++;
+        
+
+        bool isNeighbour = false;
+        for (auto x : neighbours)
+        {
+            if (lineID == x)
+            {
+                isNeighbour = true;
+                break;
+            }
+        }
+        if (!isNeighbour) continue;
+        outfile << line << std::endl;
+    }
+}
+
 void parseNeighbours (std::string neighbourFileName, std::vector<unsigned long>& neighbours, std::set<unsigned long> cID)
 {
     std::cout << "parsing neighbour file" << std::endl;
@@ -300,7 +348,7 @@ void printEllipsoids (std::ofstream& out, std::vector<ellipsoid>& ellipsoids)
         // spawn ellipsoid at origin
             out << "sphere {<"   << 0 << ", ";
             out <<                  0 << ", ";
-            out <<                  0 << "> ," << 0.9;// "}\n";
+            out <<                  0 << "> ," << 0.97;// "}\n";
 
             // scale ellipsoid r1 times two
             out << " matrix  < " <<  e.r1 << ", " << 0 << ", " << 0         << ", ";
@@ -326,7 +374,7 @@ void printEllipsoids (std::ofstream& out, std::vector<ellipsoid>& ellipsoids)
 }
 
 
-void parseXYZR (std::string xyzrFileName, std::vector<sphere>& spheres, const std::set<unsigned long> & labelList)
+void parseXYZR (std::string xyzrFileName, std::vector<ellipsoid>& spheres, const std::set<unsigned long> & labelList)
 {
     std::cout << "parsing xyzr file" << std::endl;
     std::ifstream infile;
@@ -354,13 +402,29 @@ void parseXYZR (std::string xyzrFileName, std::vector<sphere>& spheres, const st
         lineID++;
         
 
-        sphere s;
+        ellipsoid s;
         s.l = lineID;
         s.x[0] = std::stod(split[1]);
         s.x[1] = std::stod(split[2]);
         s.x[2] = std::stod(split[3]);
        
-        s.r = std::stod(split[4]); 
+        s.r1    = std::stod(split[4]); 
+        s.r2    = std::stod(split[4]); 
+        s.r3    = std::stod(split[4]); 
+
+        s.a1[0] = 1;
+        s.a1[1] = 0;
+        s.a1[2] = 0;
+        
+        s.a2[0] = 0;
+        s.a2[1] = 1;
+        s.a2[2] = 0;
+
+        s.a3[0] = 0;
+        s.a3[1] = 0;
+        s.a3[2] = 1;
+        
+
 
         bool foundLabel = false;        
         for (auto l : labelList)
@@ -477,6 +541,9 @@ void printEdge(std::ofstream& out, std::vector<pT>& cellPoints, face& f1, face& 
                     out <<                  p12.x[2] << ">,"<< cylinderRadius << " }" << std::endl;
                 }
 }  
+
+
+
 
 void parseEllipFile (std::string ellipFileName, std::vector<ellipsoid>& ellipsoids, std::set<unsigned long> & labelList)
 {

@@ -46,7 +46,14 @@ int main (int argc, char* argv[])
     std::vector<face> faces;
     parsePolyFile(polyFileName, cellPoints, faces); 
     std::vector<ellipsoid> ellipsoids;
-    parseEllipFile(ellipFile, ellipsoids, labelList);
+
+    if (ellipFile.find(".xyzr") != std::string::npos)
+    {   
+        std::cout << "parsing xyzr because of file extension" << std::endl;
+        parseXYZR (ellipFile, ellipsoids, labelList);
+    }
+    else
+        parseEllipFile(ellipFile, ellipsoids, labelList);
      
 
     std::cout << "I Have parsed V= " << cellPoints.size() << " points and F= " << faces.size() << " faces" << std::endl;
@@ -63,8 +70,13 @@ int main (int argc, char* argv[])
     std::cout << std::endl;
 
 
-    std::cout << "done parsing files.\nconverting to pov" << std::endl;
+    std::cout << "\nconverting to pov" << std::endl;
 
+    if (ellipFile.find(".xyzr") != std::string::npos)
+    {   
+        std::cout << "pasting fine xyzr file" << std::endl;
+        printXZRFine (ellipFile, neighbours);
+    }
 
     std::vector<pT> newPoints;
     std::cout << "labelling points to cells" << std::endl;
@@ -93,6 +105,7 @@ int main (int argc, char* argv[])
             }
         }
         if (skip) continue;
+
 
         for (unsigned long i = 0; i != f.vx.size(); ++i)
         {
@@ -183,7 +196,7 @@ int main (int argc, char* argv[])
     out << "light_source { <512, 812,  -212> color rgb<0.5, 0.5, 0.5> shadowless }\n";
 
     out << "camera { \n";
-//    out << "  orthographic angle 60\n";
+    out << "  orthographic angle 60\n";
     out << "  location <" << cameraPosX  <<  ", " << cameraPosY << ", "<< cameraPosZ << "> \n";
     out << "  look_at <0, 0, 0> \n";
     out << "  right x*image_width/image_height\n";
@@ -201,7 +214,7 @@ int main (int argc, char* argv[])
     out << std::setprecision(12);
 
 
-    double cylinderRadius = 1.0;
+    double cylinderRadius = 0.035;
 
     unsigned int k = 0;
     unsigned int n = 0;
