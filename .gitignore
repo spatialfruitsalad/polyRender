@@ -11,3 +11,5 @@ setpoly2pov/setpoly2pov
 setpoly2pov/setpoly2pov_easy
 setpoly2pov/test
 setpoly2pov/xyzr2pov
+polycutbox/getLabels.bsh
+polycutbox/polyCutBox
