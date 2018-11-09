@@ -5,8 +5,6 @@ This is a collection of various scripts and programs , which can help you create
 ![test](https://cloud.githubusercontent.com/assets/17979038/25128693/dea86b48-243a-11e7-8a95-6b9cc504605d.png)
 
 ## Example Video File
-Download the video file here: https://faubox.rrze.uni-erlangen.de/dl/fi7Ukc1QAq97YY6BugCmQd7s/w020_stereo5_jpeg.avi
-
 Watch the video on youtube: https://youtu.be/D3qs4lO7-jY
 
 To watch it on your android smartphone, get a google cardboard (~20$) here: https://vr.google.com/cardboard/
