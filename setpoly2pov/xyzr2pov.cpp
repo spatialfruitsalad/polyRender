@@ -34,7 +34,7 @@ int main (int argc, char* argv[])
     std::cout << "going to use N= " << labelList.size() << " spheres for drawing" << std::endl;
 
     std::vector<sphere> spheres;
-    parseXYZR (xyzrFileName, spheres, labelList);
+    parseXYZRSpheres (xyzrFileName, spheres, labelList);
 
     std::cout << "parsed S= " << spheres.size() << " spheres" << std::endl;
 
@@ -45,6 +45,6 @@ int main (int argc, char* argv[])
     std::string povFileName = "spheres.pov";
     std::ofstream out(povFileName);
 
-   printSpheres_basic(out, spheres);
+   printSpheres_basic_spheres(out, spheres);
 
 }

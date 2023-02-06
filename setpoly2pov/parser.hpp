@@ -4,7 +4,6 @@
 #include <iomanip>
 
 
-
 struct ellipsoid
 {
     unsigned long l;
@@ -41,6 +40,38 @@ struct sphere
 typedef struct pT {unsigned long l; unsigned long c; double x[3];} pT;
 typedef std::vector<pT> ptv;
 typedef struct face {unsigned long l; unsigned long c; std::vector<unsigned long> vx;} face;
+
+
+
+void printSpheres_basic (std::ofstream& out, std::vector<pT>& spherePoints)
+{
+    std::cout << "\tprint spheres" << std::endl;
+    
+    double sphereRadius = 26;
+
+    out << "#declare spheres =  union {\n";
+    for(pT p : spherePoints)
+    {
+            out << "sphere {<"   << p.x[0] << ", ";
+            out <<                  p.x[1] << ", ";
+            out <<                  p.x[2] << "> ," << sphereRadius << "}\n";
+    }
+    out << "}\n";
+}
+
+void printSpheres_basic_spheres (std::ofstream& out, std::vector<sphere>& spherePoints)
+{
+    std::cout << "\tprint spheres" << std::endl;
+
+    out << "#declare spheres =  union {\n";
+    for(auto const& p : spherePoints)
+    {
+            out << "sphere {<"   << p.x[0] << ", ";
+            out <<                  p.x[1] << ", ";
+            out <<                  p.x[2] << "> ," << p.r << "}\n";
+    }
+    out << "}\n";
+}
 
 auto getPoint(std::vector<pT>& points, unsigned long idx)
 {
@@ -429,6 +460,50 @@ void parseXYZR (std::string xyzrFileName, std::vector<ellipsoid>& spheres, const
         bool foundLabel = false;        
         for (auto l : labelList)
             if (l == s.l){foundLabel= true; break;} 
+        if (!foundLabel) continue;
+       spheres.push_back(s); 
+    }
+    infile.close();
+}
+
+
+void parseXYZRSpheres (std::string xyzrFileName, std::vector<sphere>& spheres, const std::set<unsigned long> & labelList)
+{
+    std::cout << "parsing xyzr file" << std::endl;
+    std::ifstream infile;
+    infile.open(xyzrFileName);
+    if (infile.fail())
+    {
+        throw std::string ("cannot open xyzr input file");
+    }
+    std::string line = "";
+
+    // ignore the top two lines
+
+
+    unsigned long lineID = 0;
+    while(std::getline(infile, line))   // parse lines
+    {
+		// std::cout << "line: " << line << std::endl;
+        if (line.find("#") != std::string::npos) continue;  // ignore comment lines
+        
+        splitstring ss(line.c_str());
+        std::vector<std::string> split = ss.split(' ');
+        if(split.size() != 4) std::cerr << "WARNING: Line Size not correct!" << std::endl;
+        lineID++;
+        
+
+        sphere s;
+        s.l = lineID;
+        s.x[0] = std::stod(split[0]);
+        s.x[1] = std::stod(split[1]);
+        s.x[2] = std::stod(split[2]);
+       
+        s.r    = std::stod(split[3]); 
+
+        bool foundLabel = false;        
+        for (auto l : labelList)
+			if (l == s.l){foundLabel= true; break;} 
         if (!foundLabel) continue;
        spheres.push_back(s); 
     }
